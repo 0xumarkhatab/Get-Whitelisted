@@ -17,7 +17,7 @@ export default function Introduction(props) {
           <p>{props.intro}</p>
           <div>
             <button className={styles.button} onClick={getwhitelisted}>
-              Get Whitelisted
+              Let{"'s"} Whitelisted
             </button>
           </div>
         </div>

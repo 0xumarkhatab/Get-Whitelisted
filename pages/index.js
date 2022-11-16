@@ -14,16 +14,17 @@ import { getTokensMetaData } from "../SmartContractsStuff/IpfsInteraction";
 import ShowNFTs from "./ShowNFTs";
 import { SiApostrophe } from "react-icons/si";
 
-let myUrlAddress = "https://thewhitelister.vercel.app";
+let myUrlAddress = "https://get-whitelisted.vercel.app";
 //
 let websiteType = "whitelist";
-let Blockchain = "ethereum";
-let NetworkChain = "goerli";
+let Blockchain = "polygon";
+let NetworkChain = "mumbai";
 
 export default function Home() {
   const [currentpage, setCurrentPage] = useState("home");
   const { isConnected, isDisconnected, address } = useAccount();
   const [currentDeployment, setCurrentDeployment] = useState(null);
+  const [walletAddress, setWalletAddress] = useState(null);
   const [loading, setLoading] = useState(true);
   const [brandName, setBrandName] = useState(null);
   const [whitelistStartTime, setWhitelistStartTime] = useState(0);
@@ -95,15 +96,10 @@ export default function Home() {
     // if wallet is not connected, create a new instance of Web3Modal and connect the MetaMask wallet
     // Assign the Web3Modal class to the reference object by setting it's `current` value
     // The `current` value is persisted throughout as long as this page is open
-    if (web3ModalRef.current === undefined) {
-      web3ModalRef.current = new Web3Modal({
-        network: NetworkChain,
-        providerOptions: {},
-        disableInjectedProvider: false,
-      });
-    }
-
     init();
+    if (!walletAddress && address) {
+      setWalletAddress(address);
+    }
   }, [isConnected]);
   // console.log("NFTs are ", NFTs);
 
@@ -116,7 +112,7 @@ export default function Home() {
     >
       <Navbar
         image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQr7ZZQwTn5ClB5v8hOJTehixgGs5csluH-8WIUQEB2rdEaFFzXWOoXY4oOGK09US2CAdY&usqp=CAU"
-        brandName={brandName ? brandName : "whitelister"}
+        brandName={brandName ? brandName : "Get Whitelisted"}
         func={setCurrentPage}
       />
       {currentDeployment == null ? (
@@ -133,13 +129,13 @@ export default function Home() {
             fontWeight: "700",
           }}
         >
-          {!isConnected
+          {!walletAddress
             ? "Connect Wallet First"
             : loading && !brandName
             ? "Loading Hosted Collection's details"
             : brandName
             ? brandName + " NFTs are coming.."
-            : "Whitelister is not rented for any wshitelisting yet"}
+            : "Get Whitelisted is not rented for any wshitelisting yet"}
         </div>
       ) : (
         <>

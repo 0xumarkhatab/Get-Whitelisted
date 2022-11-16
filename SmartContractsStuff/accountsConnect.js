@@ -25,26 +25,37 @@ export const connectWallet = async () => {
  * request signatures from the user using Signer functions.
  *
 =       */
-export const getProviderOrSigner = async (web3ModalRef, needSigner = false) => {
+export const getProviderOrSigner = async (network) => {
   // Connect to Metamask
   // Since we store `web3Modal` as a reference, we need to access the `current` value to get access to the underlying object
+  // alert("Please Accept the Metamask Connection");
+
+  let provider;
+  let web3Provider;
+  let signer;
+
   try {
-    console.log("web3 modal is ",web3ModalRef)
-    const provider = await web3ModalRef.current.connect();
-    const web3Provider = new providers.Web3Provider(provider);
+    await window.ethereum.enable();
+    // console.log("selected address is ", window.ethereum.selectedAddress);
+    provider = web3Provider = new ethers.providers.Web3Provider(
+      window.ethereum
+    );
+    const { chainId } = await web3Provider?.getNetwork();
 
-    // If user is not connected to the Mumbai network, let them know and throw an error
-    const { chainId } = await web3Provider.getNetwork();
-    if (chainId !== 5) {
-      window.alert("Please Change the network to Goerli");
+    if (network == "mumbai" && chainId && chainId !== 80001) {
+      window.alert("Please Change the network to Mumbai");
+      return null;
     }
 
-    if (needSigner) {
-      const signer = web3Provider.getSigner();
-      return signer;
+    signer = web3Provider.getSigner();
+    return signer;
+  } catch (err) {
+    if (err.toString().includes("already pending")) {
+      alert("Please Connect your Wallet !");
     }
-    return web3Provider;
-  } catch (e) {
-    console.log("User is not connected");
+    console.log("Error connecting wallet", err.toString());
+    return null;
   }
+  return signer;
+  // If user is not connected to the Mumbai network, let them know and throw an error
 };

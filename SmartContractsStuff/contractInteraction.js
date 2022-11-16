@@ -12,7 +12,7 @@ export const getWebsiteRentContract = async (
   networkChain,
   web3ModalRef
 ) => {
-  if (Blockchain == "ethereum") {
+  if (Blockchain == "polygon") {
     let provider = await getProviderOrSigner(web3ModalRef);
     const websiteRentContract = new Contract(
       WebsiteRentAddress,
@@ -31,7 +31,7 @@ export const getWhitelistContract = async (
   web3ModalRef,
   contractAddress
 ) => {
-  if (Blockchain == "ethereum") {
+  if (Blockchain == "polygon") {
     let signer = await getProviderOrSigner(web3ModalRef, true);
     const whitelistContract = new Contract(contractAddress, whitelistContractABI, signer);
     return whitelistContract;
