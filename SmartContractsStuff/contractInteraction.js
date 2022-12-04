@@ -31,16 +31,14 @@ export const getWhitelistContract = async (
   web3ModalRef,
   contractAddress
 ) => {
-  if (Blockchain == "polygon") {
-    let signer = await getProviderOrSigner(web3ModalRef, true);
-    const whitelistContract = new Contract(contractAddress, whitelistContractABI, signer);
-    return whitelistContract;
-  } else if (Blockchain == "tron") {
-  } else {
-    //
-  }
+  let signer = await getProviderOrSigner(web3ModalRef, true);
+  const whitelistContract = new Contract(
+    contractAddress,
+    whitelistContractABI,
+    signer
+  );
+  return whitelistContract;
 };
-
 
 export async function getCollectionURIs(
   Blockchain,
@@ -54,15 +52,15 @@ export async function getCollectionURIs(
   let baseURIs = [];
 
   console.log("Obtaining ", numNFTsToFetch, " NFTs");
-  let baseUri=await contract.baseURI();
-  if(baseUri.toString().endsWith("/")){
-    baseUri=baseUri.slice(0,-1);
+  let baseUri = await contract.baseURI();
+  if (baseUri.toString().endsWith("/")) {
+    baseUri = baseUri.slice(0, -1);
   }
   for (let index = 0; index < numNFTsToFetch; index++) {
-      let tokenuri=baseUri+`/${index+1}.json`;    
-      baseURIs.push(tokenuri);
+    let tokenuri = baseUri + `/${index + 1}.json`;
+    baseURIs.push(tokenuri);
   }
-    // console.log("base uris are ", baseURIs);
+  // console.log("base uris are ", baseURIs);
   return baseURIs;
 }
 function noDeployment(adr) {
@@ -75,8 +73,6 @@ function noDeployment(adr) {
 
   return false;
 }
-
-
 
 export async function getCurrentDeployment(
   Blockchain,
@@ -91,7 +87,7 @@ export async function getCurrentDeployment(
     web3ModalRef
   );
   //   console.log("contract is ", contract);
-  console.log("checking Deployment of _" + websiteURL + "_");
+  // console.log("checking Deployment of _" + websiteURL + "_");
   let _currentDeployment = await contract.websiteToDeployment(websiteURL);
   //   console.log("curremt deployment", _currentDeployment);
   if (noDeployment(_currentDeployment)) {

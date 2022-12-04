@@ -4,7 +4,6 @@ import Whitelist from "./Whitelist";
 import About from "./About";
 import { useEffect, useRef, useState } from "react";
 import { useAccount } from "wagmi";
-import Web3Modal from "web3modal";
 import {
   getCollectionURIs,
   getCurrentDeployment,
@@ -12,7 +11,6 @@ import {
 } from "../SmartContractsStuff/contractInteraction";
 import { getTokensMetaData } from "../SmartContractsStuff/IpfsInteraction";
 import ShowNFTs from "./ShowNFTs";
-import { SiApostrophe } from "react-icons/si";
 
 let myUrlAddress = "https://get-whitelisted.vercel.app";
 //
@@ -63,7 +61,7 @@ export default function Home() {
       web3ModalRef,
       whitelistContract
     );
-    console.log("base URIs ", baseURIs);
+    // console.log("base URIs ", baseURIs);
     await getTokensMetaData(baseURIs, setNFTs, whitelistContract);
     setLoading(false);
   }
@@ -84,7 +82,7 @@ export default function Home() {
     }
     let deploymentAddress = await fetchDeployment();
     // console.log("inside index", deploymentAddress);
-    console.log("deployment", deploymentAddress);
+    // console.log("deployment", deploymentAddress);
     if (deploymentAddress != null) {
       await fetchCollection(deploymentAddress);
       setCurrentDeployment(deploymentAddress);
@@ -106,7 +104,8 @@ export default function Home() {
   return (
     <div
       style={{
-        height: "100vh",
+        minHeight: "100vh",
+        height: "fit-content",
         background: "black",
       }}
     >
@@ -168,7 +167,20 @@ export default function Home() {
                 }
               />
               {NFTs.length == 0 ? (
-                "Fetching Collections"
+                <div
+                  style={{
+                    height: "100vh",
+                    width: "100vw",
+                    display: "flex",
+                    justifyContent: "center",
+                    background: "black",
+                    color: "white",
+                    fontSize: "20px",
+                    fontWeight: "700",
+                  }}
+                >
+                  Fetching Collection...
+                </div>
               ) : (
                 <ShowNFTs
                   isWhitelisted={isCurrentUserWhitelisted}

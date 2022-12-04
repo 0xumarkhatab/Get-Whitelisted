@@ -20,31 +20,23 @@ function NFTInformation(props) {
   let toggler = props.toggler;
   let contractAddress = props.contractAddress;
   let whitelistStatus = props.whitelistStatus;
-  let isWhitelisted=props.isWhitelisted;
+  let isWhitelisted = props.isWhitelisted;
   let nftPrice = parseInt(nft?.price);
   let nftOwner = nft.owner;
-  if (Blockchain == "ethereum") {
-    nftPrice = nftPrice / 10 ** 18;
-  } else if (Blockchain == "tron") {
-    nftPrice = nftPrice / 10 ** 6;
-  } else {
-    // we dont support this blockchain yet
-  }
+  nftPrice = nftPrice / 10 ** 18;
 
   let web3ModalRef = useRef();
   async function whitelistMe(tokenId) {
     if (userIsWhitelisted) {
       alert("You already Whitelisted ..");
       return null;
-
     }
 
-    if(!whitelistStatus){
+    if (!whitelistStatus) {
       alert("Whitelist has ended already  ..");
       return null;
-      
     }
-    
+
     alert("Stated whitelisting ...");
     if (web3ModalRef.current === undefined) {
       web3ModalRef.current = new Web3Modal({
@@ -63,16 +55,17 @@ function NFTInformation(props) {
       web3ModalRef,
       contractAddress
     );
-    // console.log("sale contract is ", whitelistContract);
+    console.log("sale contract is ", whitelistContract);
     try {
-      let tx = await whitelistContract.addAddressToWhitelist({
-        value: 0,
-      });
+      var options = { gasLimit: 300000 };
+
+      let tx = await whitelistContract.addAddressToWhitelist();
 
       setwhitelistingStatus("Wait for confirmation..");
       await tx.wait();
       successCallback();
     } catch (e) {
+      console.log("unable to whitelist", e);
       if (e.toString().includes("has ended"))
         setwhitelistingStatus("Whitelisting ended!");
     }
@@ -129,7 +122,7 @@ function NFTInformation(props) {
           disabled={whitelistingStatus !== "whitelist me" && !whitelistStatus}
         >
           {userIsWhitelisted
-            ? "You are Whitelisted "
+            ? "You are Whitelisted ✔ "
             : !whitelistStatus
             ? "Whitelisting has Ended !"
             : whitelistingStatus}

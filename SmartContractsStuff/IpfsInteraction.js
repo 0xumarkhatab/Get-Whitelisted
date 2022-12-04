@@ -7,7 +7,7 @@ function embedGateway(_hash) {
     hash = _hash.slice(8);
   }
   if (_hash.toString().startsWith("//ipfs/")) {
-    hash = _hash.slice(7,);
+    hash = _hash.slice(7);
   }
 
   if (_hash.toString().startsWith("ipfs:/")) {
@@ -41,18 +41,20 @@ export const getTokenMetadata = async (tokenUriHash, id) => {
 
 export const getTokensMetaData = async (tokenURIs, setter, contract) => {
   let metadataArray = [];
-  tokenURIs?.map(async (item, index) => {
+  for (let index = 0; index < tokenURIs.length; index++) {
+    const item = tokenURIs[index];
+
     await getTokenMetadata(item, index + 1).then(async (metadata) => {
-        
       metadataArray.push(metadata);
     });
     if (index + 1 == tokenURIs.length) {
-        console.log("metadata array is ", metadataArray);
+      console.log("metadata array is ", metadataArray);
       if (setter) {
         setter(metadataArray);
       }
       return metadataArray;
     }
-  });
+  }
+
   return metadataArray;
 };
